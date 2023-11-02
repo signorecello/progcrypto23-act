@@ -1,34 +1,21 @@
-
 import { Noir, abi } from '@noir-lang/noir_js';
 import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
-import { CompiledCircuit, ProofData } from "@noir-lang/types"
+import { CompiledCircuit, ProofData } from '@noir-lang/types';
 
-
-export type Circuits = {
-  main: CompiledCircuit,
-  [key: string]: CompiledCircuit
+export interface ProofArtifacts {
+  vkAsFields: string[];
+  proofAsFields: string[];
+  publicInputs: string[];
+  vkHash: string;
+  aggregation: string[];
 }
 
 export type BackendInstances = {
-  mains: {
-    alice: BarretenbergBackend
-    bob: BarretenbergBackend
-  },
-  aggregators: {
-    alice: BarretenbergBackend
-    bob: BarretenbergBackend
-  },
-}
+  main: BarretenbergBackend;
+  aggregator: BarretenbergBackend;
+};
 
 export type Noirs = {
-  main: Noir,
-  [key: string]: Noir
-}
-
-export interface ProofArtifacts extends ProofData {
-  returnValue: Uint8Array,
-  proofAsFields: string[],
-  vkAsFields: string[],
-  vkHash: string
-}
-
+  main: Noir;
+  aggregator: Noir;
+};
