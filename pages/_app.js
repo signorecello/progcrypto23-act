@@ -1,16 +1,14 @@
 import '../styles/App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import { NoirProvider } from '../components/context';
-import '../styles/BinaryTree.css';
+import React from 'react';
+import Link from 'next/link';
 
-export default function MyApp({ Component, pageProps }) {
+export default function TreasureHunt({ Component, pageProps }) {
   return (
     <>
-      <NoirProvider>
-        <Component {...pageProps} />
-        <ToastContainer />
-      </NoirProvider>
+      <Component {...pageProps} />
+      <ToastContainer />
     </>
   );
 }

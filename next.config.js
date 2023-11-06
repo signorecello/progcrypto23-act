@@ -6,6 +6,8 @@ const nextConfig = {
   },
   // test to check why netlify is failing:
   webpack: (config, { dev, isServer }) => {
+    // config.experiments = { asyncWebAssembly: true, layers: true };
+
     if (!dev) {
       config.optimization.minimize = false;
 
@@ -13,7 +15,6 @@ const nextConfig = {
         config.optimization.minimizer = [];
       }
     }
-
     return config;
   },
   // allows for local running of multithreads:

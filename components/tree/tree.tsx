@@ -1,39 +1,93 @@
-import React, { useEffect, ReactElement } from 'react';
-import styled from 'styled-components';
-import { StyledTreeContainer } from './tree.styles';
+import React, { useEffect, ReactElement, useState } from 'react';
+import {
+  StyledTreeContainer,
+  StyledTreeNodeChildren,
+  StyledTreeNodeContainer,
+} from './tree.styles';
+import { NoirAggregatorProvider } from '../../components/noirContext/aggregator';
+import AddProof, { LeafProps } from '../addProof/addProof';
+import { StyledButton } from '../../styles/Buttons';
+import { db } from '../../utils/db/dexie';
+import { node } from 'prop-types';
 
-function LeafButton({ level, index, nodeClickListener }) {
-  function onClick() {
-    nodeClickListener({ level, index });
-  }
+import { useLiveQuery } from 'dexie-react-hooks';
 
-  return <div className="tree-node" onClick={onClick}>{`${level}-${index}`}</div>;
-}
-
-function TreeNode({ level, index, nodeClickListener }) {
-  if (level === 0) {
-    return <LeafButton level={level} index={index} nodeClickListener={nodeClickListener} />;
-  }
+function TreeNode({ level, index, getDepth, isModalOpen }) {
+  const [nodeStyle, setNodeStyle] = useState({});
 
   const leftChildIndex = 2 * index;
   const rightChildIndex = 2 * index + 1;
 
+  const getHasProof = async () => {
+    const keyExists = await db.proofs.get({ level, index });
+    const style = {
+      opacity: isModalOpen ? 0.5 : 1,
+      backgroundColor: keyExists ? 'green' : 'red',
+    };
+
+    setNodeStyle(style);
+  };
+
+  useEffect(() => {
+    if (index >= 0 && level >= 0) getHasProof();
+  }, [level, index, isModalOpen]);
+
+  if (level < 0) {
+    return <></>;
+  }
+
   return (
-    <div className="tree-node-container">
-      <div className="tree-node">{`${level}-${index}`}</div>
-      <div className="tree-node-children">
-        <TreeNode level={level - 1} index={leftChildIndex} nodeClickListener={nodeClickListener} />
-        <TreeNode level={level - 1} index={rightChildIndex} nodeClickListener={nodeClickListener} />
-      </div>
-    </div>
+    <StyledTreeNodeContainer isModalOpen={isModalOpen}>
+      {/* Tree node styles need to be in CSS because TreeNode is recursively called */}
+      <div className="tree-node" style={nodeStyle}>{`${level}-${index}`}</div>
+      <StyledTreeNodeChildren depth={getDepth()}>
+        <TreeNode
+          level={level - 1}
+          index={leftChildIndex}
+          getDepth={getDepth}
+          isModalOpen={isModalOpen}
+        />
+        <TreeNode
+          level={level - 1}
+          index={rightChildIndex}
+          getDepth={getDepth}
+          isModalOpen={isModalOpen}
+        />
+      </StyledTreeNodeChildren>
+    </StyledTreeNodeContainer>
   );
 }
 
-function Tree({ depth, nodeClickListener, isModalOpen }) {
+function Tree({ depth }) {
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [treeNonce, setTreeNonce] = useState(0);
+  const proofs = useLiveQuery(() => db.proofs.toArray());
+
+  function getDepth() {
+    return depth;
+  }
+
   return (
-    <StyledTreeContainer isModalOpen={isModalOpen} className="tree-container">
-      <TreeNode level={depth} index={0} nodeClickListener={nodeClickListener} />
-    </StyledTreeContainer>
+    <NoirAggregatorProvider>
+      {proofs && (
+        <StyledTreeContainer>
+          <StyledButton primary="true" onClick={() => setModalOpen(!isModalOpen)}>
+            Add new proof
+          </StyledButton>
+          <TreeNode
+            key={proofs.length}
+            level={depth}
+            index={0}
+            getDepth={getDepth}
+            isModalOpen={isModalOpen}
+          />
+        </StyledTreeContainer>
+      )}
+
+      {isModalOpen && <AddProof setModalOpen={() => setModalOpen(!isModalOpen)} />}
+
+      {/* <Leaf stickerId={0} leafProps={activeLeaf} toggleModal={setActive} /> */}
+    </NoirAggregatorProvider>
   );
 }
 export default Tree;

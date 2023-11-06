@@ -4,4 +4,4 @@ export const publicInputsDB: string[] = [
 ];
 
 // the answers - cheater!
-export const cheats: number[] = [0, 1];
+export const cheats: string[] = ['0', '1'];

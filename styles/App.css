@@ -1,5 +1,11 @@
-/* body {
+body {
   margin: 0;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  color: #073642; /* dark blue text */
+  margin: 0;
+  text-align: center;
+  word-break: break-all;
 }
 
 .faded {
@@ -11,4 +17,18 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-} */
+}
+
+/* Tree node styles need to be in CSS because TreeNode is recursively called */
+.tree-node {
+  display: flex;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  line-height: 40px;
+  border: 1px solid #ccc;
+  background-color: white;
+  text-align: center;
+  border-radius: 15px; /* Rounded corners */
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); /* Drop shadow */
+  transition: transform 0.3s; /* Transition effect */
+}
