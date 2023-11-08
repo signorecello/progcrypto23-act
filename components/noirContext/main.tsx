@@ -1,11 +1,10 @@
 import { createContext, useEffect, useState } from 'react';
 import { BackendInstances, Noirs } from '../../types';
-import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
-import { Noir } from '@noir-lang/noir_js';
+import { BarretenbergBackend } from '@signorecello/backend_barretenberg';
+import { Noir } from '@signorecello/noir_js';
 import { CompiledCircuit } from '@noir-lang/types';
 
 import main from '../../circuits/main/target/main.json';
-import aggregator from '../../circuits/aggregator/target/aggregator.json';
 import React from 'react';
 
 export const NoirMainContext = createContext<{ noir: Noir; backend: BarretenbergBackend } | null>(
@@ -16,10 +15,13 @@ export function NoirMainProvider({ children }) {
   const [noir, setNoir] = useState<{ noir: Noir; backend: BarretenbergBackend } | null>(null);
 
   useEffect(() => {
-    if (main && aggregator) {
+    if (main) {
       const initializeNoir = async () => {
         const backend = new BarretenbergBackend(main as unknown as CompiledCircuit, {
           threads: window.navigator.hardwareConcurrency,
+          memory: {
+            maximum: 2 ** 14,
+          },
         });
 
         const noir = new Noir(main as unknown as CompiledCircuit, backend);
@@ -29,7 +31,7 @@ export function NoirMainProvider({ children }) {
       };
       initializeNoir();
     }
-  }, [main, aggregator]);
+  }, [main]);
 
   if (!noir) return <></>;
 

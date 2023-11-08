@@ -1,12 +1,12 @@
-use dep::std::hash::pedersen;
+use dep::std::hash::pedersen_hash;
 use dep::std::println;
 
 fn main(input: Field) -> pub Field {
-    pedersen([input])[0]
+    pedersen_hash([input])
 }
 
 #[test]
 fn test_main() {
-    let hash = main(1);
+    let hash = main(2015);
     println(hash);
 }

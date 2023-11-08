@@ -6,7 +6,6 @@ import Image from 'next/image';
 import styled from 'styled-components';
 import { StyledHeader, StyledParagraph } from '../../styles/Typography';
 import { StyledNodeProofInput } from '../addProof/addProof.styles';
-import { publicInputsDB, cheats } from '../../utils/publicInputsToMain';
 import snape from '../../pages/images/snape.jpg';
 import { StyledButton } from '../../styles/Buttons';
 import { QuizContainer, StyledBigFatHash } from './quiz.styles';
@@ -38,36 +37,60 @@ const ImageContainer = styled.div`
 
 export default function Quiz({ stickerId, back, setProofParams }) {
   const [userInput, setUserInput] = useState<{ [key: string]: string }>({
-    answer: cheats[stickerId],
     username: 'zpedrongmi',
   });
+  const [cheats, setCheats] = useState<{ [key: string]: string }>({});
   const { noir, backend } = useContext(NoirMainContext)!;
 
   const handleChange = e => {
     e.preventDefault();
-    console.log(e.target.value);
     setUserInput({ ...userInput, [e.target.name]: e.target.value });
   };
+
+  const getCheats = async () => {
+    const res = await fetch(`/api/getAnswerHash?stickerId=${stickerId}`, {
+      method: 'GET',
+    });
+    const { answer, answerHash } = await res.json();
+    setCheats({ answer, answerHash });
+  };
+
+  useEffect(() => {
+    getCheats();
+  }, []);
 
   // this is a stub, because nargo will only give me final proofs
   // later on each sticker has its own modal and returns its own final proof
   const submit = async () => {
     try {
-      console.log(userInput);
-      const { witness } = await noir!.execute({
-        answer: userInput!.answer,
-        answerHash: publicInputsDB[stickerId],
+      console.log({
+        answer: userInput!.answer || cheats.answer,
+        answerHash: cheats.answerHash,
       });
 
-      const intermediateProof = await toast.promise(backend!.generateIntermediateProof(witness), {
-        pending: 'Generating proof...',
-        success: 'Proof generated!',
+      const { witness } = await noir!.execute({
+        answer: userInput!.answer || cheats.answer,
+        answerHash: cheats.answerHash,
       });
-      const hexProof = toHex(intermediateProof.proof);
+
+      const { proof, publicInputs } = (await toast.promise(
+        backend!.generateIntermediateProof(witness),
+        {
+          pending: 'Generating proof...',
+          success: 'Proof generated!',
+        },
+      )) as ProofData;
+      const hexProof = toHex(proof);
+      const hexPublicInputs = toHex(publicInputs[0]);
 
       await fetch('/api/submitProof', {
         method: 'POST',
-        body: JSON.stringify({ username: userInput!.username, proof: hexProof, stickerId }),
+        body: JSON.stringify({
+          username: userInput!.username,
+          stickerId,
+          proof: hexProof,
+          publicInputs: hexPublicInputs,
+        }),
       });
 
       setProofParams({ username: userInput!.username, proof: hexProof });

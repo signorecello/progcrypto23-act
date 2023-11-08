@@ -1,7 +1,7 @@
 'use client';
 
-import { Noir, abi } from '@noir-lang/noir_js';
-import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
+import { Noir, abi } from '@signorecello/noir_js';
+import { BarretenbergBackend } from '@signorecello/backend_barretenberg';
 import { CompiledCircuit, ProofData } from '@noir-lang/types';
 
 export interface ProofArtifacts {
@@ -34,6 +34,7 @@ export interface DBProof {
 
 export type DBPutBody = {
   username: string;
-  proof: string;
   stickerId: string;
+  proof: string;
+  publicInputs: string;
 };

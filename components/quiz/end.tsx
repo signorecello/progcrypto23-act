@@ -6,7 +6,6 @@ import Image from 'next/image';
 import styled from 'styled-components';
 import { StyledHeader, StyledParagraph } from '../../styles/Typography';
 import { StyledNodeProofInput } from '../addProof/addProof.styles';
-import { publicInputsDB, cheats } from '../../utils/publicInputsToMain';
 import snape from '../../pages/images/snape.jpg';
 import { StyledButton } from '../../styles/Buttons';
 import { QuizContainer, StyledBigFatHash } from './quiz.styles';

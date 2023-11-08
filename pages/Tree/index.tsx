@@ -2,7 +2,6 @@ import React, { ReactElement, useContext, useState } from 'react';
 import Tree from '../../components/tree/tree';
 import Leaf, { LeafProps } from '../../components/addProof/addProof';
 import { NoirAggregatorProvider } from '../../components/noirContext/aggregator';
-import { cheats, publicInputsDB } from '../../utils/publicInputsToMain';
 import { StyledHeader } from '../../styles/Typography';
 import { ModalComponent } from '../../components/modal';
 
