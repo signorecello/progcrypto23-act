@@ -22,3 +22,10 @@ export const StyledButton = styled.button<{ isDisabled?: boolean; primary?: stri
     transform: translateY(-2px);
   }
 `;
+
+export const ButtonsContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 2rem;
+`;

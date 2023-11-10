@@ -5,7 +5,7 @@ body {
   color: #073642; /* dark blue text */
   margin: 0;
   text-align: center;
-  word-break: break-all;
+  word-break: break-word;
 }
 
 .faded {

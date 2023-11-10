@@ -21,7 +21,7 @@ export const StyledSubheader = styled.h2`
 `;
 
 export const StyledParagraph = styled.p`
-  font-size: 1.125rem; // 18px
+  font-size: 1rem; // 18px
   color: #666; // Even lighter for regular text to differentiate from headings
   margin-bottom: 1.25rem; // 20px
   line-height: 1.6; // Increased line height for paragraph readability

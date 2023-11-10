@@ -8,6 +8,7 @@ export const QuizContainer = styled.div`
   max-width: 600px;
   margin: auto;
   height: 100vh;
+  justify-content: center;
 `;
 
 export const StyledBigFatHash = styled.p`

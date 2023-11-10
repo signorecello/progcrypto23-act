@@ -20,19 +20,26 @@ import { NoirMainProvider } from '../../components/noirContext/main';
 export default function HunterPage() {
   const [showQuiz, setShowQuiz] = useState(false);
   const [proofParams, setProofParams] = useState<{ username: string; proof: string } | null>(null);
+  const [stickerId, setStickerId] = useState<string | null>();
 
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    console.log(searchParams.get('stickerId'));
-    console.log(proofParams);
-  }, []);
+    const sticker = searchParams.get('stickerId');
+    if (sticker) setStickerId(sticker);
+  }, [searchParams]);
 
-  if (showQuiz && !proofParams) {
+  if (!stickerId) {
+    return <>Seems like you're here by mistake!</>;
+  }
+
+  if (!proofParams) {
+    if (!showQuiz)
+      return <QuizIntro back={() => setShowQuiz(false)} next={() => setShowQuiz(true)} />;
     return (
       <NoirMainProvider>
         <Quiz
-          stickerId={searchParams.get('stickerId')}
+          stickerId={stickerId}
           back={() => setShowQuiz(false)}
           setProofParams={setProofParams}
         />
@@ -40,7 +47,5 @@ export default function HunterPage() {
     );
   } else if (proofParams) {
     return <QuizEnd username={proofParams.username} proof={proofParams.proof} />;
-  } else {
-    return <QuizIntro back={() => setShowQuiz(false)} next={() => setShowQuiz(true)} />;
   }
 }

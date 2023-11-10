@@ -4,10 +4,9 @@ import { QrScanner } from '@yudiel/react-qr-scanner';
 import { useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
-import { StyledHeader, StyledParagraph } from '../../styles/Typography';
+import { StyledHeader, StyledParagraph, StyledSubheader } from '../../styles/Typography';
 import { StyledNodeProofInput } from '../addProof/addProof.styles';
-import snape from '../../pages/images/snape.jpg';
-import { StyledButton } from '../../styles/Buttons';
+import { StyledButton, ButtonsContainer } from '../../styles/Buttons';
 import { QuizContainer, StyledBigFatHash } from './quiz.styles';
 import { ProofData } from '@noir-lang/types';
 import { toast } from 'react-toastify';
@@ -30,16 +29,13 @@ export const StyledAnswer = styled.input`
   }
 `;
 
-const ImageContainer = styled.div`
-  width: 90%;
-  margin: 1rem 0;
-`;
-
 export default function Quiz({ stickerId, back, setProofParams }) {
   const [userInput, setUserInput] = useState<{ [key: string]: string }>({
     username: 'zpedrongmi',
   });
   const [cheats, setCheats] = useState<{ [key: string]: string }>({});
+  const [pending, setPending] = useState(false);
+
   const { noir, backend } = useContext(NoirMainContext)!;
 
   const handleChange = e => {
@@ -59,14 +55,10 @@ export default function Quiz({ stickerId, back, setProofParams }) {
     getCheats();
   }, []);
 
-  // this is a stub, because nargo will only give me final proofs
-  // later on each sticker has its own modal and returns its own final proof
-  const submit = async () => {
+  const submit = async ({ withExtra }: { withExtra?: boolean }) => {
+    if (withExtra) toast.info("Too late, I'm proving stuff for you anyway lol");
     try {
-      console.log({
-        answer: userInput!.answer || cheats.answer,
-        answerHash: cheats.answerHash,
-      });
+      setPending(true);
 
       const { witness } = await noir!.execute({
         answer: userInput!.answer || cheats.answer,
@@ -96,31 +88,27 @@ export default function Quiz({ stickerId, back, setProofParams }) {
       setProofParams({ username: userInput!.username, proof: hexProof });
     } catch (err) {
       console.log(err);
-      toast.error('Oops! Wrong answer!');
-      toast.info('Tip: I hate quizzes. Try an empty answer...');
+      toast.info('I hate quizzes. Try an empty answer.');
+    } finally {
+      setPending(false);
     }
   };
 
   return (
     <QuizContainer>
-      <StyledParagraph>It will prove you know this answer, without revealing it!</StyledParagraph>
+      <StyledSubheader>When was Ethereum launched?</StyledSubheader>
+      <StyledAnswer name="answer" type="number" placeholder="wen" onChange={handleChange} />
+      <StyledParagraph>A username (optional)</StyledParagraph>
+      <StyledAnswer name="username" type="text" placeholder="@zpedrongmi" onChange={handleChange} />
 
-      <StyledParagraph>
-        Check out the Aztec booth to see me verify your answer... ...inside another circuit!
-      </StyledParagraph>
-      <ImageContainer>
-        <Image src={snape} alt="Gif" layout="responsive" />
-      </ImageContainer>
-      <StyledParagraph>When was Ethereum launched?</StyledParagraph>
-      <StyledAnswer name="answer" type="text" placeholder="2023" onChange={handleChange} />
-
-      <StyledParagraph>Your username</StyledParagraph>
-      <StyledAnswer name="username" type="text" placeholder="zpedrongmi" onChange={handleChange} />
-
-      <StyledButton primary="true" onClick={submit}>
-        Submit
-      </StyledButton>
-      <StyledButton onClick={back}>Back</StyledButton>
+      <ButtonsContainer>
+        <StyledButton primary="true" onClick={() => submit} isDisabled={pending}>
+          Submit
+        </StyledButton>
+        <StyledButton onClick={() => submit({ withExtra: true })} isDisabled={pending}>
+          Too hard, I give up
+        </StyledButton>
+      </ButtonsContainer>
     </QuizContainer>
   );
 }

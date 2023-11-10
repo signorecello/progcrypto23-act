@@ -20,15 +20,8 @@ export default function QuizEnd({ username, proof }) {
   console.log(username, proof);
   return (
     <QuizContainer>
-      <StyledParagraph>Uh yeah, a shiny new proof! Look at this beauty</StyledParagraph>
-      <StyledParagraph>
-        Username: {username}
-        Proof: {proof}
-      </StyledParagraph>
-      <StyledParagraph>
-        Now come visit the Aztec booth and tell me your username! Let's verify your answer...
-        Recursively
-      </StyledParagraph>
+      <StyledHeader>That's it!</StyledHeader>
+      <StyledParagraph>Now visit the Aztec booth</StyledParagraph>
     </QuizContainer>
   );
 }

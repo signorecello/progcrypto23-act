@@ -3,12 +3,11 @@ import styled from 'styled-components';
 export const StyledTreeContainer = styled.div``;
 
 // Styled component for .tree-node-container
-export const StyledTreeNodeContainer = styled.div<{ isModalOpen: boolean }>`
-  opacity: ${props => (props.isModalOpen ? 0.5 : 1)};
+export const StyledTreeNodeContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: ${props => (props.isModalOpen ? 'hidden' : 'visible')};
+  overflow: visible;
 `;
 
 // Styled component for .tree-node-children
