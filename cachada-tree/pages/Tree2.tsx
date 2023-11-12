@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import styles from '../styles/Tree.module.css';
+import { galaxieCopernicus } from '@/fonts/fonts';
 
 interface ProjectProps {
   children?: ReactNode;
@@ -24,6 +25,24 @@ const FamilyTree = () => {
   return (
     <>
       <main className={styles.main}>
+        <div>
+          {' '}
+          <h1 className={`${styles.title} ${galaxieCopernicus.className}`}>Project Leaderboard</h1>
+        </div>
+        <div className={styles.container}>
+          <ul>
+            <li>
+              <label> #-#</label>
+              <Project>
+                <Project>
+                  <Project>
+                    <Project></Project>
+                  </Project>
+                </Project>
+              </Project>
+            </li>
+          </ul>
+        </div>
         <div className={styles.background}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -53,24 +72,6 @@ const FamilyTree = () => {
               </linearGradient>
             </defs>
           </svg>
-        </div>
-        <div>
-          {' '}
-          <h1 className={styles.title}>Project Leaderboard</h1>
-        </div>
-        <div className={styles.container}>
-          <ul>
-            <li>
-              <label> #-#</label>
-              <Project>
-                <Project>
-                  <Project>
-                    <Project></Project>
-                  </Project>
-                </Project>
-              </Project>
-            </li>
-          </ul>
         </div>
       </main>
     </>

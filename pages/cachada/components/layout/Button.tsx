@@ -1,4 +1,5 @@
 import React, { CSSProperties } from 'react';
+import { useRouter } from 'next/router';
 
 interface CustomButtonProps {
   label?: string;
@@ -11,23 +12,33 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   color = '#FFF',
   background = 'linear-gradient(74deg, #FD269A 4.49%, #FF9D88 114.81%)',
 }) => {
+  const router = useRouter();
+
   const buttonStyles: CSSProperties = {
-    width: '100%',
-    color: color,
-    textAlign: 'center',
-    fontFamily: 'Inter',
-    fontSize: '15px',
-    fontStyle: 'normal',
-    fontWeight: '600',
-    lineHeight: 'normal',
-    paddingTop: '16px',
-    paddingBottom: '16px',
-    borderRadius: '4px',
+    background,
     border: '1px solid rgba(255, 255, 255, 0.50)',
-    background: background,
+    borderRadius: '4px',
+    color,
+    fontFamily: 'inherit',
+    fontSize: '15px',
+    fontWeight: '600',
+    paddingBottom: '16px',
+    paddingTop: '16px',
+    textAlign: 'center',
+    width: '100%',
   };
 
-  return <button style={buttonStyles}>{label}</button>;
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        router.pathname === '/cachada/phone-1' ? router.push('/cachada/phone-2') : router.back();
+      }}
+      style={buttonStyles}
+    >
+      {label}
+    </button>
+  );
 };
 
 export default CustomButton;

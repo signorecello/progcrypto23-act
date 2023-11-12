@@ -1,25 +1,32 @@
 import React, { CSSProperties, ReactNode } from 'react';
+import { galaxieCopernicus } from '../../fonts/fonts';
 
 interface HeadingProps {
-  children: ReactNode;
   color?: string;
   fontSize?: string;
   fontWeight?: number | string;
+  children: ReactNode;
 }
 
-const H1: React.FC<HeadingProps> = ({ children, color, fontSize, fontWeight }) => {
+const H1: React.FC<HeadingProps> = ({
+  color = '#96A0FF',
+  fontSize = '28px',
+  fontWeight = '700',
+  children,
+}) => {
   const styles: CSSProperties = {
-    textAlign: 'center',
-    fontFamily: 'Inter',
-    fontSize: fontSize || '28px',
-    fontStyle: 'normal',
-    fontWeight: fontWeight || 650,
-    lineHeight: 'normal',
+    color,
+    fontSize,
+    fontWeight,
     margin: 0,
-    color: color || '#96A0FF',
+    textAlign: 'center',
   };
 
-  return <h1 style={styles}>{children}</h1>;
+  return (
+    <h1 className={galaxieCopernicus.className} style={styles}>
+      {children}
+    </h1>
+  );
 };
 
 export default H1;

@@ -4,22 +4,16 @@ interface SectionProps {
   children: ReactNode;
   paddingRight?: string;
   paddingLeft?: string;
-  // paddingBottom?: string;
-  // padding?: string;
 }
 
 const Section: React.FC<SectionProps> = ({
   children,
-  paddingRight,
-  paddingLeft,
-  // paddingBottom,
-  // padding,
+  paddingRight = '20px',
+  paddingLeft = '20px',
 }) => {
   const styles: CSSProperties = {
-    paddingRight: paddingRight || '20px',
-    paddingLeft: paddingLeft || '20px',
-    // paddingBottom,
-    // padding,
+    paddingRight: paddingRight,
+    paddingLeft: paddingLeft,
   };
 
   return <section style={styles}>{children}</section>;

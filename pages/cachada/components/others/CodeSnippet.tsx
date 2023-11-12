@@ -1,45 +1,36 @@
 import React from 'react';
+import { inconsolata } from '../../fonts/fonts';
 
 const CodeSnippet = () => {
-  const lavender = {
-    color: '#E4BAFF',
-  };
-
-  const salmon = {
-    color: '#FF855F',
-  };
-
-  const dodgerBlue = {
-    color: '#75BCFB',
+  const { lavender, salmon, dodgerBlue } = {
+    lavender: { color: '#E4BAFF' },
+    salmon: { color: '#FF855F' },
+    dodgerBlue: { color: '#75BCFB' },
   };
 
   return (
     <div
       style={{
-        marginTop: '40px',
-        marginBottom: '40px',
-        padding: '30px 20px 30px 20px',
-        borderRadius: '6px',
-        gap: '10px',
-        border: '1px solid #ffffff',
         background: 'linear-gradient(75deg, #321E4C 2.27%, #08040C 100%)',
+        border: '1px solid #ffffff',
+        borderRadius: '6px',
         boxShadow: '0px 16px 80px 0px rgba(0, 0, 0, 0.64)',
+        gap: '10px',
+        margin: '40px 0',
+        padding: '20px 10px',
       }}
     >
       <pre
         style={{
-          textAlign: 'left',
-          fontFamily: 'inconsolata',
-          whiteSpace: 'pre-wrap',
-          margin: 0,
           display: 'inline-block',
-          fontSize: '12px',
-          fontStyle: 'normal',
+          fontSize: '15px',
           fontWeight: 400,
-          lineHeight: 'normal',
+          margin: 0,
+          textAlign: 'left',
+          whiteSpace: 'pre-wrap',
         }}
       >
-        <code>
+        <code className={inconsolata.className}>
           <span style={lavender}>fn</span> <span style={salmon}>main</span>(
           <br />
           {'  '}

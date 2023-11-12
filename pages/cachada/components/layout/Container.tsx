@@ -5,18 +5,22 @@ const inter = Inter({ subsets: ['latin'] });
 
 interface ContainerProps {
   children?: ReactNode;
-  bgColor?: string;
-  textColor?: string;
+  backgroundColor?: string;
+  color?: string;
 }
 
-const Container: React.FC<ContainerProps> = ({ children, textColor, bgColor }) => {
+const Container: React.FC<ContainerProps> = ({
+  backgroundColor = '#321e4c',
+  color = '#ffffff',
+  children,
+}) => {
   const styles: CSSProperties = {
-    backgroundColor: bgColor || '#321e4c',
-    color: textColor || '#ffffff',
-    minHeight: '100vh',
-    boxShadow: '0 0 10px rgba(255, 255, 255, 0.2)', //Remover isto depois
-    maxWidth: '480px', // Remover depois
+    backgroundColor,
+    boxShadow: '0 0 10px rgba(255, 255, 255, 0.2)',
+    color,
     margin: 'auto',
+    maxWidth: '480px', // Remover depois
+    minHeight: '100vh',
   };
 
   return (

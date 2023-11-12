@@ -1,22 +1,29 @@
 import React, { CSSProperties, ReactNode } from 'react';
 
 interface TextProps {
-  children: ReactNode;
-  fontSize?: string;
   color?: string;
+  fontSize?: string;
   fontWeight?: string;
   align?: CSSProperties['textAlign'];
   width?: string;
+  children: ReactNode;
 }
 
-const Text: React.FC<TextProps> = ({ children, fontSize, color, fontWeight, align, width }) => {
+const Text: React.FC<TextProps> = ({
+  color = '#fff',
+  fontSize = '12px',
+  fontWeight = '400',
+  align = 'center',
+  width = '100%',
+  children,
+}) => {
   const styles: CSSProperties = {
-    fontSize: fontSize || '12px',
-    color: color || '#fff',
-    fontWeight: fontWeight || '400',
-    textAlign: align || 'center',
-    width: width || '100%',
+    color,
+    fontSize,
+    fontWeight,
     margin: 'auto',
+    textAlign: align,
+    width,
   };
 
   return <p style={styles}>{children}</p>;

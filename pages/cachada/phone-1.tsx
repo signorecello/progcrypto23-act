@@ -18,7 +18,6 @@ const Phone3 = ({ name = 'Hunter!' }) => {
   return (
     <>
       <div style={{ background: '#321E4C' }}>
-        {/* <div style={{ background: '#000', padding: ' 20px 10px' }}> */}
         <Container>
           <Spacer y={40} />
           <Section>

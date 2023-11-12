@@ -1,14 +1,14 @@
 import React, { CSSProperties, ReactNode } from 'react';
 
 interface ImageSectionProps {
-  imageUrl: string;
+  imageUrl?: string;
 }
 
-const ImageSection: React.FC<ImageSectionProps> = ({ imageUrl }) => {
+const ImageSection: React.FC<ImageSectionProps> = ({ imageUrl = '/intro_gif.gif' }) => {
   const sectionStyles: CSSProperties = {
+    overflow: 'hidden',
     position: 'relative',
     width: '100%',
-    overflow: 'hidden',
   };
 
   const beforeStyles: CSSProperties = {
@@ -18,12 +18,9 @@ const ImageSection: React.FC<ImageSectionProps> = ({ imageUrl }) => {
   };
 
   const divStyles: CSSProperties = {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
     background: `url('${imageUrl}') center/contain no-repeat`,
+    inset: 0,
+    position: 'absolute',
   };
 
   return (

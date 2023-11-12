@@ -3,25 +3,22 @@ import {
   Spacer,
   Container,
   Section,
-  H1,
   Text,
   ImageSection,
-  CodeSnippet,
   ImageBgWrapper,
   Input,
 } from './components';
 import CustomButton from './components/layout/Button';
 
-const Phone2 = ({ name = 'Hunter!' }) => {
+const Phone2 = () => {
   const [answer, setAnswer] = useState('');
   console.log(answer);
 
-  const imageUrl = '/image-phone2.png';
+  const imageUrl = '/meme-snape.png';
 
   return (
     <>
       <div style={{ background: '#321E4C' }}>
-        {/* <div style={{ background: '#000', padding: ' 20px 10px' }}> */}
         <Container>
           <Spacer y={40} />
           <Section>
@@ -64,7 +61,6 @@ const Phone2 = ({ name = 'Hunter!' }) => {
                 }}
               >
                 <Input
-                  value={answer}
                   placeholder="2023"
                   onChange={event => {
                     setAnswer(event.target.value);

@@ -5,11 +5,8 @@
 .title {
   color: #321e4c;
   text-align: center;
-  font-family: Galaxie Copernicus;
   font-size: 48px;
-  font-style: normal;
   font-weight: 400;
-  line-height: normal;
 }
 
 .background {
@@ -21,6 +18,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: -100;
 }
 
 .container {
@@ -57,20 +55,17 @@
 }
 .container ul li label {
   display: inline-block;
-  height: 40px;
+  height: 50px;
   padding: 10px 5px;
-  line-height: 20px;
+  line-height: 25px;
   margin-bottom: 2em;
   position: relative;
   white-space: nowrap;
-  box-sizing: border-box;
   user-select: none;
-  cursor: pointer;
   border: 1px solid #e4baff;
   border-radius: 8px;
   background: linear-gradient(19deg, #f9e8fe 3.18%, #fff 100%);
   color: #321e4c;
-  font-family: Inter;
   font-size: 14px;
 
   font-weight: 400;
@@ -89,8 +84,7 @@
 }
 .container ul li label::after {
   top: auto;
-  bottom: calc(-1em - 2px);
-  height: 1;
+  bottom: calc(-1em - 1px);
 }
 .container ul li label:last-child::after {
   display: none;

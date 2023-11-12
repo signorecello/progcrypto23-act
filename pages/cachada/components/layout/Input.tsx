@@ -4,25 +4,28 @@ interface InputProps {
   placeholder: string;
   color?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  value?: string;
 }
 
-const Input: React.FC<InputProps> = ({ placeholder, color, onChange, value }) => {
+const Input: React.FC<InputProps> = ({ placeholder, color = '#514167', onChange }) => {
   const styles: CSSProperties = {
-    color: color || '#514167',
-    textAlign: 'left',
-    fontFamily: 'Inter',
-    fontSize: '15px',
-    fontStyle: 'normal',
-    fontWeight: 400,
-    lineHeight: 'normal',
-    padding: '16px',
-    borderRadius: '4px',
-    border: '1px solid #dadedf',
     background: '#fff',
+    border: '1px solid #dadedf',
+    borderRadius: '4px',
+    color,
+    fontFamily: 'inherit',
+    padding: '16px',
+    textAlign: 'left',
   };
 
-  return <input onChange={onChange} style={styles} type="text" placeholder={placeholder} />;
+  return (
+    <input
+      type="text"
+      onChange={onChange}
+      style={styles}
+      placeholder={placeholder}
+      maxLength={50}
+    />
+  );
 };
 
 export default Input;
