@@ -25,6 +25,13 @@
     ]
   },
   "exclude": ["dist", "node_modules"],
-  "include": ["./test", "./pages", "./scripts", ".next/types/**/*.ts", "declarations.d.ts"],
+  "include": [
+    "./test",
+    "./pages",
+    "./scripts",
+    ".next/types/**/*.ts",
+    "declarations.d.ts",
+    "tree-cachada"
+  ],
   "files": ["./hardhat.config.ts"]
 }
