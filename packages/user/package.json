@@ -1,0 +1,14 @@
+{
+  "name": "user",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "dev:db-init": "ts-node utils/db-init.ts"
+  },
+  "dependencies": {
+    "next": "^14.0.2"
+  }
+}

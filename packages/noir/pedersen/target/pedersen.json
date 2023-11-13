@@ -1,0 +1,31 @@
+{
+    "noir_version": "0.19.1+79a2facd584592be9b8951f7d57913c9080a47b4",
+    "hash": 4497736829736951278,
+    "backend": "acvm-backend-barretenberg",
+    "abi": {
+        "parameters": [
+            {
+                "name": "input",
+                "type": {
+                    "kind": "field"
+                },
+                "visibility": "private"
+            }
+        ],
+        "param_witnesses": {
+            "input": [
+                {
+                    "start": 1,
+                    "end": 2
+                }
+            ]
+        },
+        "return_type": {
+            "kind": "field"
+        },
+        "return_witnesses": [
+            2
+        ]
+    },
+    "bytecode": "H4sIAAAAAAAA/12IsQ0AAAjCKov/P2yM0cHAQlsBwW4+zetY1jHWaw3z1ImLVAAAAA=="
+}
