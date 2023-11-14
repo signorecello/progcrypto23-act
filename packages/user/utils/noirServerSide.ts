@@ -11,7 +11,7 @@ class ServerNoir {
   constructor() {
     console.log('ServerNoir constructor');
     this.backend = new BarretenbergBackend(main as unknown as CompiledCircuit, {
-      threads: 8
+      threads: 1
     });
 
     console.log("0")
