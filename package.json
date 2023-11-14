@@ -9,7 +9,9 @@
   "workspaces": {
     "packages": [
       "packages/user",
-      "packages/tree"
+      "packages/tree",
+      "packages/noir",
+      "packages/types"
     ]
   },
   "dependencies": {
