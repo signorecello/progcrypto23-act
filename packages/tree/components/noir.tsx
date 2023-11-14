@@ -1,43 +1,38 @@
+'use client';
+
 import { createContext, useEffect, useState } from 'react';
 import { BarretenbergBackend } from '@signorecello/backend_barretenberg';
 import { Noir } from '@signorecello/noir_js';
 import { CompiledCircuit } from '@noir-lang/types';
 
-import main from '../../noir/main/target/main.json';
+import aggregator from '../../noir/aggregator/target/aggregator.json';
 import React from 'react';
 
-export const NoirMainContext = createContext<{ noir: Noir; backend: BarretenbergBackend } | null>(
-  null,
-);
+export const NoirAggregatorContext = createContext<{
+  noir: Noir;
+  backend: BarretenbergBackend;
+} | null>(null);
 
-interface NoirMainProviderProps {
-  children: React.ReactNode;
-}
-
-export const NoirMainProvider : React.FC<NoirMainProviderProps> = ({ children }) => {
+export function NoirAggregatorProvider({ children } : any) {
   const [noir, setNoir] = useState<{ noir: Noir; backend: BarretenbergBackend } | null>(null);
 
   useEffect(() => {
-    if (main) {
+    if (aggregator) {
       const initializeNoir = async () => {
-        const backend = new BarretenbergBackend(main as unknown as CompiledCircuit, {
-          threads: window.navigator.hardwareConcurrency,
-          memory: {
-            initial: 25,
-            maximum: 2 ** 14,
-          },
+        const backend = new BarretenbergBackend(aggregator as unknown as CompiledCircuit, {
+          threads: 8,
         });
 
-        const noir = new Noir(main as unknown as CompiledCircuit, backend);
+        const noir = new Noir(aggregator as unknown as CompiledCircuit, backend);
         await noir.init();
 
         setNoir({ noir, backend });
       };
       initializeNoir();
     }
-  }, [main]);
+  }, [aggregator]);
 
   if (!noir) return <></>;
 
-  return <NoirMainContext.Provider value={noir}>{children}</NoirMainContext.Provider>;
+  return <NoirAggregatorContext.Provider value={noir}>{children}</NoirAggregatorContext.Provider>;
 }

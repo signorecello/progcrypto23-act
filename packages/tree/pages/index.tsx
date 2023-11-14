@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import styles from '../styles/Tree.module.css';
 import { galaxieCopernicus } from '../fonts/fonts';
 import Tree from '@/components/tree/tree';
-import { NoirAggregatorProvider } from '@/components/noirContext/aggregator';
+import { NoirAggregatorProvider } from '@/components/noir';
 
 interface SmallProps {
   children?: ReactNode;

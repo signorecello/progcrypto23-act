@@ -1,11 +1,11 @@
 import React, { useEffect, ReactElement, useState, useContext } from 'react';
 
-import { NoirAggregatorContext } from '../noirContext/aggregator';
+import { NoirAggregatorContext } from '../noir';
 import { node } from 'prop-types';
 
 import { fromHex, padHex, toHex } from 'viem';
 import { Fr } from '@signorecello/bb.js';
-import { NoirMainContext, NoirMainProvider } from '../noir';
+import { NoirAggregatorProvider } from '../noir';
 
 import clientPromise from '../../utils/db/mongo';
 import { Db, MongoClient } from 'mongodb';
@@ -171,7 +171,7 @@ const Tree : React.FC<TreeProps> = ({ depth }) => {
   }, []);
 
   return (
-    <NoirMainProvider>
+    <NoirAggregatorProvider>
       {proofs && (
         <ul>
           <li>
@@ -185,7 +185,7 @@ const Tree : React.FC<TreeProps> = ({ depth }) => {
         </ul>
       )}
       {/* <Leaf stickerId={0} leafProps={activeLeaf} toggleModal={setActive} /> */}
-    </NoirMainProvider>
+    </NoirAggregatorProvider>
   );
 }
 export default Tree;
