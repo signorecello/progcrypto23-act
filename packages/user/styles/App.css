@@ -18,3 +18,13 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+input::placeholder {
+  color: #514167;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+button:hover {
+  cursor: pointer;
+}

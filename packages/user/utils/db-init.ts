@@ -2,7 +2,7 @@ import { cpus } from 'os';
 import answers from './answers.json';
 import dotenv from 'dotenv';
 import { CompiledCircuit, Noir } from '@signorecello/noir_js';
-import pedersen from '../circuits/pedersen/target/pedersen.json';
+import pedersen from '../../noir/pedersen/target/pedersen.json';
 // import { Barretenberg, Fr } from '@signorecello/bb.js';
 
 dotenv.config();

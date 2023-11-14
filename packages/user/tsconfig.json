@@ -31,7 +31,5 @@
     "./scripts",
     ".next/types/**/*.ts",
     "declarations.d.ts",
-    "tree-cachada"
-  ],
-  "files": ["./hardhat.config.ts"]
+  ]
 }

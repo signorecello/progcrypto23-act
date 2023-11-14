@@ -20,6 +20,7 @@ export function NoirMainProvider({ children }) {
         const backend = new BarretenbergBackend(main as unknown as CompiledCircuit, {
           threads: window.navigator.hardwareConcurrency,
           memory: {
+            initial: 25,
             maximum: 2 ** 14,
           },
         });

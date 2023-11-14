@@ -1,10 +1,6 @@
-import { BarretenbergBackend } from '@signorecello/backend_barretenberg';
-import { DBAggrPutBody, DBProof, DBPutBody } from '../../types';
+import { DBAggrPutBody } from '../../types';
 import clientPromise from '../../utils/db/mongo';
-import { CompiledCircuit, Noir } from '@signorecello/noir_js';
-import main from '../../circuits/main/target/main.json';
 import { fromHex } from 'viem';
-import { Fr } from '@signorecello/bb.js';
 import { noir } from '../../utils/noirServerSide';
 
 export default async function handler(req, res) {
