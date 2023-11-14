@@ -3,28 +3,26 @@ import { CompiledCircuit, Noir } from '@signorecello/noir_js';
 import main from '../../noir/main/target/main.json';
 import { fromHex } from 'viem';
 import { Fr } from '@signorecello/bb.js';
+import { cpus } from "os"
 
 class ServerNoir {
   backend;
   noir;
 
   constructor() {
-    console.log('ServerNoir constructor');
     this.backend = new BarretenbergBackend(main as unknown as CompiledCircuit, {
-      threads: 1
+      threads: cpus.length,
+      memory: {
+        initial: 25,
+        maximum: 2 ** 16
+      }
     });
 
-    console.log("0")
     this.noir = new Noir(main as unknown as CompiledCircuit, this.backend);
-    console.log("1")
   }
 
   async init() {
-    console.log("2")
-
     await this.noir.init();
-    console.log("3")
-
   }
 
   getBackend() {

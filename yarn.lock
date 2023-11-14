@@ -1287,10 +1287,10 @@
     "@sentry/types" "5.30.0"
     tslib "^1.9.3"
 
-"@signorecello/backend_barretenberg@0.19.4":
-  version "0.19.4"
-  resolved "https://registry.yarnpkg.com/@signorecello/backend_barretenberg/-/backend_barretenberg-0.19.4.tgz#ae906a6c244dbc80694ead7ee931a77b02179792"
-  integrity sha512-2fGAECyhtkDfTjScUlgetkJ+/k5Mk3aXm3Qxk7602ztaAJaAuimPR7WNPiBV5wmn/eKZehF/HIJqmsCMN/WAUA==
+"@signorecello/backend_barretenberg@0.19.6":
+  version "0.19.6"
+  resolved "https://registry.yarnpkg.com/@signorecello/backend_barretenberg/-/backend_barretenberg-0.19.6.tgz#4bf0b3c13fda9e20eea29decb4922c2e364c7a3a"
+  integrity sha512-spHVInRpe9hRhPLNpXCJgRRNOwL5G4GRCdQmPjnfs1BF4DLoerYYqqFfjEV1hNe+8KatkXOz9cExYU37lIvJtw==
   dependencies:
     "@noir-lang/types" "0.19.1"
     "@signorecello/bb.js" "0.13.1"
