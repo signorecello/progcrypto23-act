@@ -1,4 +1,4 @@
-import React, { useEffect, ReactElement, useState, useContext } from 'react';
+import React, { useEffect, ReactElement, useState, useContext, useCallback } from 'react';
 
 import { NoirAggregatorContext } from '../noir';
 import { node } from 'prop-types';
@@ -100,19 +100,19 @@ const TreeNode : React.FC<TreeNodeProps> = ({ level, index, proofs }) => {
     });
   };
 
-  const getHasProof = async () => {
+  const getHasProof = useCallback(async () => {
     const keyExists = proofs.find(p => p.index == index && p.level == level);
     const style = {
       "background-image": keyExists ? "linear-gradient(19deg, green, 3.18%, rgb(255, 255, 255) 100%)" : 'linear-gradient(19deg, #f9e8fe, 3.18%, rgb(255, 255, 255) 100%)',
     };
 
     setNodeStyle(style);
-  };
+  }, [proofs, index, level]);
 
   useEffect(() => {
     console.log("hey")
     if (index >= 0 && level >= 0) getHasProof();
-  }, [level, index]);
+  }, [level, index, getHasProof]);
 
   if (level < 0) {
     return <></>;
@@ -164,10 +164,6 @@ const Tree : React.FC<TreeProps> = ({ depth }) => {
       setProofs(proofs);
     };
     getProofs();
-  }, []);
-
-  useEffect(() => {
-    console.log(proofs);
   }, []);
 
   return (

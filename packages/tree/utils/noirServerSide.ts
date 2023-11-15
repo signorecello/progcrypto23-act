@@ -12,6 +12,7 @@ class ServerNoir {
     this.backend = new BarretenbergBackend(main as unknown as CompiledCircuit, {
       threads: 8,
       memory: {
+        initial: 25,
         maximum: 2 ** 14,
       },
     });

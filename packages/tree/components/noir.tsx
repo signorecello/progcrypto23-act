@@ -30,7 +30,7 @@ export function NoirAggregatorProvider({ children } : any) {
       };
       initializeNoir();
     }
-  }, [aggregator]);
+  }, []);
 
   if (!noir) return <></>;
 
