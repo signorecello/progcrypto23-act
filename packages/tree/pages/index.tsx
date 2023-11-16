@@ -10,7 +10,7 @@ interface SmallProps {
 }
 
 const ProjectTree = () => {
-  const treeDepth = 5;
+  const treeDepth = process.env.TREE_DEPTH as unknown as number || 5;
   return (
     <NoirAggregatorProvider>
       <main className={styles.main}>
@@ -22,7 +22,7 @@ const ProjectTree = () => {
           <ul>
             <li>
               <label>#-#</label>
-              <Tree depth={treeDepth - 1} />
+              <Tree depth={treeDepth} />
             </li>
           </ul>
         </div>

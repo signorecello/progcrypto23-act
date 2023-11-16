@@ -143,19 +143,24 @@ const TreeNode : React.FC<TreeNodeProps> = ({ level, index, proofs }) => {
 
   return (
     <>
-      <label
+      {level != (process.env.TREE_DEPTH || 5) && <label
           className="tree-node"
-          style={{...nodeStyle, pointerEvents: pending ? 'none' : 'auto', cursor: 'pointer', opacity: pending ? 0.5 : 1}}
+          style={{
+            ...nodeStyle, 
+            pointerEvents: pending ? 'none' : 'auto', 
+            cursor: 'pointer', 
+            opacity: pending ? 0.5 : 1
+          }}
           onClick={(e) => {e.stopPropagation(); return verifyRecursive(level)}}
-        >{`${level}-${index}`}</label>
-      <ul>
+        >{`${level}-${index}`}</label>}
+      {level != 0 && <ul>
         <li>
           <TreeNode proofs={proofs} level={level - 1} index={leftChildIndex}  />
         </li>
         <li>
           <TreeNode proofs={proofs} level={level - 1} index={rightChildIndex} />
         </li>
-      </ul>
+      </ul>}
     </>
     
   );

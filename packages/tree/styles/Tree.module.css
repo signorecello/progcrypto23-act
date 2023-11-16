@@ -104,3 +104,7 @@
   visibility: visible;
   transform: scale(1);
 }
+
+.tree-node:last-child::after {
+  display: none;
+}
