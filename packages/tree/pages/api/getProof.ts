@@ -8,7 +8,6 @@ export default async function handler(req : any, res : any) {
     const db = dbClient.db('proofs');
     const proof = await db.collection('proofs').findOne({ level, index });
 
-    console.log(proof);
     res.status(200).send({ proof });
   } catch (error) {
     console.log(error);
