@@ -6,7 +6,6 @@ import { fromHex } from 'viem';
 export default async function handler(req, res) {
   try {
     const { username, stickerId, proof, publicInputs }: DBPutBody = JSON.parse(req.body);
-    console.log(username, stickerId, proof, publicInputs);
 
     const dbClient = await clientPromise;
     const proofDB = dbClient.db('proofs');

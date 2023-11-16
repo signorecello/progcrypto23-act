@@ -6,15 +6,12 @@ import { noir } from '../../utils/noirServerSide';
 export default async function handler(req, res) {
   try {
     const { level, index, proof, publicInputs }: DBAggrPutBody = JSON.parse(req.body);
-    console.log({ level, index, proof, publicInputs });
 
     const dbClient = await clientPromise;
     const proofDB = dbClient.db('proofs');
 
     await noir.init();
-    console.log("after init")
     const backend = await noir.getBackend()
-    console.log("after getBackend")
     const { proofAsFields, vkAsFields, vkHash } = backend
       .generateIntermediateProofArtifacts(
         {

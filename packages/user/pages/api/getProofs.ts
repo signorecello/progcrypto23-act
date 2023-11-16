@@ -14,7 +14,6 @@ export default async function handler(req, res) {
       .project({ level: true, index: true })
       .toArray();
 
-    console.log(proofs);
     res.status(200).send({ proofs });
   } catch (error) {
     console.log(error);
