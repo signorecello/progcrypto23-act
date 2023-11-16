@@ -22,11 +22,14 @@ const TreeNode : React.FC<TreeNodeProps> = ({ level, index, proofs }) => {
   const { noir, backend } = useContext(NoirAggregatorContext)!;
 
   const [nodeStyle, setNodeStyle] = useState({});
+  const [pending, setPending] = useState(false)
 
   const leftChildIndex = 2 * index;
   const rightChildIndex = 2 * index + 1;
 
   const verifyRecursive = async (level : number) => {
+      setPending(true)
+
     if (level == 0) return;
 
     try {
@@ -116,6 +119,8 @@ const TreeNode : React.FC<TreeNodeProps> = ({ level, index, proofs }) => {
 
     } catch (e) {
       console.log(e);
+    } finally {
+      setPending(false)
     }
   };
 
@@ -140,7 +145,7 @@ const TreeNode : React.FC<TreeNodeProps> = ({ level, index, proofs }) => {
     <>
       <label
           className="tree-node"
-          style={nodeStyle}
+          style={{...nodeStyle, pointerEvents: pending ? 'none' : 'auto', cursor: 'pointer', opacity: pending ? 0.5 : 1}}
           onClick={(e) => {e.stopPropagation(); return verifyRecursive(level)}}
         >{`${level}-${index}`}</label>
       <ul>
