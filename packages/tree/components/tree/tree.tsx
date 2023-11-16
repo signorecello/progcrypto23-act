@@ -1,4 +1,5 @@
 import React, { useEffect, ReactElement, useState, useContext, useCallback } from 'react';
+import { toast } from 'react-toastify';
 
 import { NoirAggregatorContext } from '../noir';
 import { node } from 'prop-types';
@@ -9,6 +10,7 @@ import { NoirAggregatorProvider } from '../noir';
 
 import clientPromise from '../../utils/db/mongo';
 import { Db, MongoClient } from 'mongodb';
+import { ProofData } from '@noir-lang/types';
 
 interface TreeNodeProps {
   level: number;
@@ -24,80 +26,97 @@ const TreeNode : React.FC<TreeNodeProps> = ({ level, index, proofs }) => {
   const leftChildIndex = 2 * index;
   const rightChildIndex = 2 * index + 1;
 
-  const verifyRecursive = async (level : number, index : number) => {
+  const verifyRecursive = async (level : number) => {
     if (level == 0) return;
-    console.log("fetching left proof at", {
-        level: level - 1,
-        index: index * 2,
+
+    try {
+      console.log("fetching left proof at", {
+          level: level - 1,
+          index: leftChildIndex,
+        })
+      let leftRes = await fetch('/api/getProof', {
+        method: 'POST',
+        body: JSON.stringify({
+          level: level - 1,
+          index: leftChildIndex,
+        }),
+      });
+      const { proof: leftProof } = await leftRes.json();
+      let { vk, proof, answerHash, vkHash } = leftProof;
+      const left = {
+        proof,
+        publicInputs: answerHash,
+        aggregation: new Array(16).fill(padHex('0x0', { size: 32 })),
+      };
+
+      console.log("fetching right proof at", {
+          level: level - 1,
+          index: rightChildIndex,
+        })
+      let rightRes = await fetch('/api/getProof', {
+        method: 'POST',
+        body: JSON.stringify({
+          level: level - 1,
+          index: rightChildIndex,
+        }),
+      });
+      const { proof: rightProof } = await rightRes.json();
+      ({ proof, answerHash } = rightProof);
+      const right = {
+        proof,
+        publicInputs: answerHash,
+        aggregation: new Array(16).fill(padHex('0x0', { size: 32 })),
+      };
+
+      const inputs = {
+        vk,
+        vk_hash: vkHash,
+        left_proof: left.proof,
+        left_public_inputs: [left.publicInputs],
+        incoming_aggregation: left.aggregation,
+        right_proof: right.proof,
+        right_public_inputs: [right.publicInputs],
+      }; 
+
+      const { witness, returnValue } = await noir.execute(inputs);
+      const begin = new Date().getTime();
+      console.log(begin);
+      console.log(inputs);
+      console.log(backend)
+
+      const { proof: recProof, publicInputs } = (await toast.promise(
+        backend.generateIntermediateProof(witness),
+        {
+          pending: 'Generating proof...',
+          success: 'Proof generated!',
+        },
+      )) as ProofData;
+
+      const hexRecProof = toHex(recProof);
+      const hexPublicInputs = toHex(publicInputs[0]);
+      console.log(recProof, publicInputs);
+      const end = new Date().getTime();
+      console.log(end);
+
+      console.log('Duration of proof generation: ', end - begin, 'ms');
+      const submitProof = fetch('/api/submitAggregatedProof', {
+        method: 'POST',
+        body: JSON.stringify({
+          level,
+          index,
+          proof: hexRecProof,
+          publicInputs: hexPublicInputs,
+        }),
+      });
+
+      await toast.promise(submitProof, {
+        pending: 'Submitting proof...',
+        success: 'Proof submitted!',
       })
-    let res = await fetch('/api/getProof', {
-      method: 'POST',
-      body: JSON.stringify({
-        level: level - 1,
-        index: index * 2,
-      }),
-    });
-    const { proof: leftProof } = await res.json();
-    let { vk, proof, answerHash, vkHash } = leftProof;
-    const left = {
-      proof,
-      publicInputs: answerHash,
-      aggregation: new Array(16).fill(padHex('0x0', { size: 32 })),
-    };
 
-    console.log("fetching right proof at", {
-        level: level - 1,
-        index: index * 2 + 1,
-      })
-    res = await fetch('/api/getProof', {
-      method: 'POST',
-      body: JSON.stringify({
-        level: level - 1,
-        index: index * 2 + 1,
-      }),
-    });
-    const { proof: rightProof } = await res.json();
-    ({ proof, answerHash } = rightProof);
-    const right = {
-      proof,
-      publicInputs: answerHash,
-      aggregation: new Array(16).fill(padHex('0x0', { size: 32 })),
-    };
-
-    const inputs = {
-      vk,
-      vk_hash: vkHash,
-      left_proof: left.proof,
-      left_public_inputs: [left.publicInputs],
-      incoming_aggregation: left.aggregation,
-      right_proof: right.proof,
-      right_public_inputs: [right.publicInputs],
-    }; 
-
-    const { witness, returnValue } = await noir.execute(inputs);
-    const begin = new Date().getTime();
-    console.log(begin);
-    console.log(inputs);
-    console.log(backend)
-
-    const { proof: recProof, publicInputs } = await backend.generateIntermediateProof(witness);
-
-    const hexRecProof = toHex(recProof);
-    const hexPublicInputs = toHex(publicInputs[0]);
-    console.log(recProof, publicInputs);
-    const end = new Date().getTime();
-    console.log(end);
-
-    console.log('Duration of proof generation: ', end - begin, 'ms');
-    await fetch('/api/submitAggregatedProof', {
-      method: 'POST',
-      body: JSON.stringify({
-        level,
-        index,
-        proof: hexRecProof,
-        publicInputs: hexPublicInputs,
-      }),
-    });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const getHasProof = useCallback(async () => {
@@ -110,7 +129,6 @@ const TreeNode : React.FC<TreeNodeProps> = ({ level, index, proofs }) => {
   }, [proofs, index, level]);
 
   useEffect(() => {
-    console.log("hey")
     if (index >= 0 && level >= 0) getHasProof();
   }, [level, index, getHasProof]);
 
@@ -119,26 +137,22 @@ const TreeNode : React.FC<TreeNodeProps> = ({ level, index, proofs }) => {
   }
 
   return (
-    <ul>
-      {/* Tree node styles need to be in CSS because TreeNode is recursively called */}
-      <li onClick={(e) => {e.stopPropagation(); return verifyRecursive(level, leftChildIndex)}}>
-        <label
+    <>
+      <label
           className="tree-node"
           style={nodeStyle}
-        >{`${level}-${leftChildIndex}`}</label>
-
-        <TreeNode proofs={proofs} level={level - 1} index={leftChildIndex}  />
-      </li>
-      <li onClick={(e) => {e.stopPropagation(); return verifyRecursive(level, rightChildIndex)}}>
-
-        <label
-          className="tree-node"
-          style={nodeStyle}
-        >{`${level}-${rightChildIndex}`}</label>
-        
-        <TreeNode proofs={proofs} level={level - 1} index={rightChildIndex} />
-      </li>
-    </ul>
+          onClick={(e) => {e.stopPropagation(); return verifyRecursive(level)}}
+        >{`${level}-${index}`}</label>
+      <ul>
+        <li>
+          <TreeNode proofs={proofs} level={level - 1} index={leftChildIndex}  />
+        </li>
+        <li>
+          <TreeNode proofs={proofs} level={level - 1} index={rightChildIndex} />
+        </li>
+      </ul>
+    </>
+    
   );
 }
 
@@ -151,19 +165,17 @@ const Tree : React.FC<TreeProps> = ({ depth }) => {
   const [mongos, setMongos] = useState<{ client: MongoClient; db: Db } | null>(null);
   const [proofs, setProofs] = useState<any | null>(null);
 
-  function getDepth() {
-    return depth;
-  }
-
   useEffect(() => {
     const getProofs = async () => {
-      const res = await fetch('/api/getProofs?level=0', {
-        method: 'GET',
-      });
-      const { proofs } = await res.json();
-      setProofs(proofs);
-    };
+        const res = await fetch('/api/getProofs?level=0', {
+          method: 'GET',
+        });
+        const { proofs } = await res.json();
+        setProofs(proofs);
+    }
     getProofs();
+    const dbTimeout = setInterval(getProofs, 5000)
+    return () => clearInterval(dbTimeout);
   }, []);
 
   return (

@@ -73,7 +73,7 @@ export default function Quiz({ stickerId, back, setProofParams }) {
       const hexProof = toHex(proof);
       const hexPublicInputs = toHex(publicInputs[0]);
 
-      await fetch('/api/submitProof', {
+      const submitProof = fetch('/api/submitProof', {
         method: 'POST',
         body: JSON.stringify({
           username: userInput!.username,
@@ -82,6 +82,11 @@ export default function Quiz({ stickerId, back, setProofParams }) {
           publicInputs: hexPublicInputs,
         }),
       });
+
+      await toast.promise(submitProof, {
+        pending: 'Submitting proof...',
+        success: 'Proof submitted!',
+      })
 
       setProofParams({ username: userInput!.username, proof: hexProof });
     } catch (err) {
