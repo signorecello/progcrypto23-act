@@ -6,6 +6,7 @@ interface CustomButtonProps {
   color?: string;
   background?: string;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -13,6 +14,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   color = '#FFF',
   background = 'linear-gradient(74deg, #FD269A 4.49%, #FF9D88 114.81%)',
   onClick,
+  disabled = false,
 }) => {
   const router = useRouter();
 
@@ -28,6 +30,8 @@ const CustomButton: React.FC<CustomButtonProps> = ({
     paddingTop: '16px',
     textAlign: 'center',
     width: '100%',
+    pointerEvents: disabled ? 'none' : 'auto',
+    opacity: disabled ? 0.5 : 1,
   };
 
   return (

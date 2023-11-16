@@ -17,54 +17,54 @@ import Image from 'next/image';
 import { StyledHeader, StyledParagraph, StyledSubheader } from '../../styles/Typography';
 import { StyledButton, ButtonsContainer } from '../../styles/Buttons';
 import { QuizContainer, StyledBigFatHash } from './quiz.styles';
-import { ProofData } from '@noir-lang/types';
+import { CompiledCircuit, ProofData } from '@noir-lang/types';
 import { toast } from 'react-toastify';
 
-import { NoirMainContext } from '../noirContext/main';
 import { toHex } from 'viem';
 
-export default function Quiz({ stickerId, back, setProofParams }) {
+export default function Quiz({ noirInstance, questionId, quiz, setProofParams }) {
   const [userInput, setUserInput] = useState<{ [key: string]: string }>({
     username: 'zpedrongmi',
   });
   const [cheats, setCheats] = useState<{ [key: string]: string }>({});
   const [pending, setPending] = useState(false);
 
-  const { noir, backend } = useContext(NoirMainContext)!;
+  const { noir, backend } = noirInstance
 
   const handleChange = e => {
     e.preventDefault();
     setUserInput({ ...userInput, [e.target.name]: e.target.value });
   };
 
-  useEffect(() => {
-    console.log(userInput)
-  }, [userInput])
-
   const getCheats = async () => {
-    const res = await fetch(`/api/getAnswerHash?stickerId=${stickerId}`, {
+    const res = await fetch(`/api/getAnswerHash?stickerId=${questionId}`, {
       method: 'GET',
     });
     const { answer, answerHash } = await res.json();
-    setCheats({ answer, answerHash });
+    console.log(questionId, answer, quiz.answer, answerHash)
+    setCheats({ answerHash });
   };
 
+
   useEffect(() => {
+    console.log(quiz)
     getCheats();
   }, []);
 
   const submit = async ({ withExtra }: { withExtra?: boolean }) => {
+    setPending(true);
+
     if (withExtra) toast.info("Too late, I'm proving stuff for you anyway lol");
+
     try {
-      setPending(true);
 
       const { witness } = await noir!.execute({
-        answer: userInput!.answer || cheats.answer,
+        answer: userInput!.answer,
         answerHash: cheats.answerHash,
       });
 
       const { proof, publicInputs } = (await toast.promise(
-        backend!.generateIntermediateProof(witness),
+        backend.generateIntermediateProof(witness),
         {
           pending: 'Generating proof...',
           success: 'Proof generated!',
@@ -77,7 +77,7 @@ export default function Quiz({ stickerId, back, setProofParams }) {
         method: 'POST',
         body: JSON.stringify({
           username: userInput!.username,
-          stickerId,
+          questionId,
           proof: hexProof,
           publicInputs: hexPublicInputs,
         }),
@@ -88,13 +88,15 @@ export default function Quiz({ stickerId, back, setProofParams }) {
         success: 'Proof submitted!',
       })
 
+      setPending(false);
+
       setProofParams({ username: userInput!.username, proof: hexProof });
     } catch (err) {
-      console.log(err);
-      toast.info('I hate quizzes. Try an empty answer.');
-    } finally {
       setPending(false);
-    }
+
+      console.log(err);
+      toast.info('Oops! Try again!');
+    } 
   };
 
   return (
@@ -123,7 +125,7 @@ export default function Quiz({ stickerId, back, setProofParams }) {
             <Section>
               {' '}
               <Text color="" fontSize="22px" fontWeight="700">
-                When was Ethereum launched?
+                {quiz.question}
               </Text>
               <Spacer y={10} />
               <div
@@ -142,22 +144,16 @@ export default function Quiz({ stickerId, back, setProofParams }) {
                   name="answer"
                   onChange={handleChange}
                 />
-              <Text color="" fontSize="18px">
-                Username (optional)
-              </Text>
-                <Input
-                  placeholder="someusername"
-                  name="username"
-                  onChange={handleChange}
-                />
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
                   <CustomButton
                     label="That's it?"
+                    disabled={pending}
                     onClick={() => submit({ withExtra: false })}
                     background="linear-gradient(74deg, #FD269A 4.49%, #FF9D88 114.81%)"
                   />
                   <CustomButton
                     label="WTF man"
+                    disabled={pending}
                     onClick={() => submit({ withExtra: true })}
                     background="linear-gradient(0deg, rgba(0, 0, 0, 0.48) 0%, rgba(0, 0, 0, 0.48) 100%), linear-gradient(74deg, rgba(253, 38, 154, 0.40) 4.49%, rgba(255, 157, 136, 0.40) 114.81%)"
                   />

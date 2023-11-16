@@ -1,3 +1,18 @@
 [
-    "2015"
+    {
+        "question": "When did we get Ethereum mainnet?",
+        "answer": "2015"
+    },
+    {
+        "question": "What's the Ethereum block time in seconds?",
+        "answer": "12"
+    },
+    {
+        "question": "What's the size of an Ethereum address in bytes?",
+        "answer": "20"
+    },
+    {
+        "question": "Target block gas limit for Ethereum, in millions",
+        "answer": "15"
+    }
 ]

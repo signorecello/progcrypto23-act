@@ -1,50 +1,64 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
-import TreasureHunt from './images/treasure_hunt.png';
-import { StyledHeader, StyledParagraph, StyledSubheader } from '../styles/Typography';
-import { StyledButton } from '../styles/Buttons';
-import { ModalComponent } from '../components/modal';
+import React, { useContext, useEffect, useState } from 'react';
 import Quiz from '../components/quiz/quiz';
 import QuizIntro from '../components/quiz/intro';
 import QuizEnd from '../components/quiz/end';
 
 import { useSearchParams } from 'next/navigation';
-import circuitImage from '../../pages/images/main_circuit.png';
-import introGif from '../../pages/images/intro_gif.gif';
+import quiz from '../utils/answers.json';
 
-import { NoirMainProvider } from '../components/noirContext/main';
-
+import { BarretenbergBackend, CompiledCircuit } from '@signorecello/backend_barretenberg';
+import main from '../../noir/main/target/main.json';
+import { Noir } from '@signorecello/noir_js';
 // Component
 export default function HunterPage() {
   const [showQuiz, setShowQuiz] = useState(false);
-  const [proofParams, setProofParams] = useState<{ username: string; proof: string } | null>(null);
-  const [stickerId, setStickerId] = useState<string | null>();
+  const [proofParams, setProofParams] = useState<{ username: string; proof: string }[]>([]);
+  const [noir, setNoir] = useState<{ noir: Noir, backend: BarretenbergBackend } | null>(null);
 
-  const searchParams = useSearchParams();
+  const addProof = ((proofParams) => {
+    setProofParams(prev => {
+      return [...prev, proofParams]
+    })
+    console.log(proofParams)
+  })
 
-  useEffect(() => {
-    const sticker = searchParams.get('stickerId');
-    if (sticker) setStickerId(sticker);
-  }, [searchParams]);
+  const init = async () => {
 
-  if (!stickerId) {
-    return <>Seems like you're here by mistake!</>;
+    let backend : BarretenbergBackend | null = new BarretenbergBackend(main as unknown as CompiledCircuit, {
+      threads: window.navigator.hardwareConcurrency,
+      memory: {
+        initial: 25,
+        maximum: 2 ** 14,
+      },
+    });
+
+    
+    let noir : Noir | null = new Noir(main as unknown as CompiledCircuit, backend);
+    await noir.init();
+    setNoir({noir, backend})
   }
 
-  if (!proofParams) {
-    if (!showQuiz)
-      return <QuizIntro back={() => setShowQuiz(false)} next={() => setShowQuiz(true)} />;
+  useEffect(() => {
+    init();
+
+    if (noir) return () => { noir.noir.destroy() };
+  }, [])
+
+  if (!noir) return <></>;
+
+  if (Object.keys(proofParams).length < quiz.length) {
+    if (!showQuiz) { return <QuizIntro back={() => setShowQuiz(false)} next={() => setShowQuiz(true)} /> };
+    
     return (
-      <NoirMainProvider>
-        <Quiz
-          stickerId={stickerId}
-          back={() => setShowQuiz(false)}
-          setProofParams={setProofParams}
-        />
-      </NoirMainProvider>
+      <Quiz
+        noirInstance={noir}
+        key={proofParams.length}
+        questionId={proofParams.length}
+        quiz={quiz[proofParams.length]}
+        setProofParams={(e) => addProof(e)}
+      />
     );
-  } else if (proofParams) {
-    return <QuizEnd username={proofParams.username} proof={proofParams.proof} />;
+  } else {
+    return <QuizEnd />;
   }
 }

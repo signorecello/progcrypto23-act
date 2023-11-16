@@ -1,5 +1,5 @@
 import { cpus } from 'os';
-import answers from './answers.json';
+import quiz from './answers.json';
 import dotenv from 'dotenv';
 import { CompiledCircuit, Noir } from '@signorecello/noir_js';
 import pedersen from '../../noir/pedersen/target/pedersen.json';
@@ -12,20 +12,22 @@ const addAnswerHashes = async () => {
   const clientPromise = await import('./db/mongo');
   const dbClient = await clientPromise.default;
 
-  for await (let [index, answer] of answers.entries()) {
+  dbClient.db('answers').dropCollection('answers');
+  for await (let [index, entry] of quiz.entries()) {
     const db = dbClient.db('answers');
     const { returnValue } = await new Noir(pedersen as unknown as CompiledCircuit).execute({
-      input: answer,
+      input: entry.answer,
     });
-
-    // let returnValue = await bb.pedersenHashWithHashIndex([Fr.fromString(answer)], 0);
 
     await db.collection('answers').insertOne({
       stickerId: index,
-      answer: answer,
+      question: entry.question,
+      answer: entry.answer,
       answerHash: returnValue.toString(),
     });
   }
+
+  dbClient.close();
 
   // bb.destroy();
 };
