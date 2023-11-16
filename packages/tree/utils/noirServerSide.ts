@@ -3,14 +3,14 @@ import { CompiledCircuit, Noir } from '@signorecello/noir_js';
 import main from '../../noir/main/target/main.json';
 import { fromHex } from 'viem';
 import { Fr } from '@signorecello/bb.js';
-
+import { cpus } from "os";
 class ServerNoir {
   backend;
   noir;
 
   constructor() {
     this.backend = new BarretenbergBackend(main as unknown as CompiledCircuit, {
-      threads: 8,
+      threads: cpus.length,
       memory: {
         initial: 25,
         maximum: 2 ** 14,

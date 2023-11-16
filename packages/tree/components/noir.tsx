@@ -20,7 +20,7 @@ export function NoirAggregatorProvider({ children } : any) {
     if (aggregator) {
       const initializeNoir = async () => {
         const backend = new BarretenbergBackend(aggregator as unknown as CompiledCircuit, {
-          threads: 8,
+          threads: window.navigator.hardwareConcurrency,
         });
 
         const noir = new Noir(aggregator as unknown as CompiledCircuit, backend);
