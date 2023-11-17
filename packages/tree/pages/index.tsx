@@ -4,6 +4,8 @@ import { galaxieCopernicus } from '../fonts/fonts';
 import Tree from '@/components/tree/tree';
 import { NoirAggregatorProvider } from '@/components/noir';
 
+import Image from 'next/image';
+
 interface SmallProps {
   children?: ReactNode;
   depth: number;
@@ -13,6 +15,14 @@ const ProjectTree = () => {
   const treeDepth = process.env.TREE_DEPTH as unknown as number || 5;
   return (
     <NoirAggregatorProvider>
+
+      <main style={{
+        position: "absolute",
+        top: 0,
+        right: 20
+      }}>
+        <Image src="/qrcode.png" width="230" height="230" alt="qrcode" />
+      </main>
       <main className={styles.main}>
         <div>
           {' '}
