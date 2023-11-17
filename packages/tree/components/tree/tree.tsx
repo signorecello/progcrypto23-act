@@ -101,7 +101,7 @@ const TreeNode : React.FC<TreeNodeProps> = ({ level, index, proofs }) => {
       const end = new Date().getTime();
       console.log(end);
 
-      console.log('Duration of proof generation: ', end - begin, 'ms');
+      toast.info(`Duration: ${(end - begin) / 1000}s`);
       const submitProof = fetch('/api/submitAggregatedProof', {
         method: 'POST',
         body: JSON.stringify({
