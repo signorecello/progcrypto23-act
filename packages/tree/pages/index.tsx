@@ -21,6 +21,7 @@ const ProjectTree = () => {
         top: 80,
         right: 20
       }}>
+        <h1>Answer me! 👇</h1>
         <Image src="/qrcode.png" width="230" height="230" alt="qrcode" />
       </main>
       <main className={styles.main}>
