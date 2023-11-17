@@ -18,7 +18,7 @@ const ProjectTree = () => {
 
       <main style={{
         position: "absolute",
-        top: 0,
+        top: 20,
         right: 20
       }}>
         <Image src="/qrcode.png" width="230" height="230" alt="qrcode" />
